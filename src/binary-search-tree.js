@@ -23,17 +23,20 @@ class BinarySearchTree {
     } else {
       let currentNode = this.rootNode
       while (true) {
+        if (currentNode.data === data) {
+          return node
+        }
         if (data < currentNode.data) {
           if (!currentNode.left) {
             currentNode.left = node
-            break
+            return node
           } else {
             currentNode = currentNode.left
           }
         } else {
           if (!currentNode.right) {
             currentNode.right = node
-            break
+            return node
           } else {
             currentNode = currentNode.right
           }
@@ -42,29 +45,73 @@ class BinarySearchTree {
     }
   }
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented')
-    // remove line with error and write your code here
+  has(data) {
+    return !!this.find(data)
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented')
-    // remove line with error and write your code here
+  find(data) {
+    let currentNode = this.rootNode
+    while (currentNode) {
+      if (data === currentNode.data) {
+        return currentNode
+      }
+      currentNode =
+        data < currentNode.data ? currentNode.left : currentNode.right
+    }
+    return null
   }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented')
-    // remove line with error and write your code here
+  remove(data) {
+    this.rootNode = this.removeNode(this.rootNode, data)
+  }
+
+  removeNode(node, data) {
+    if (!node) {
+      return null
+    }
+    if (data < node.data) {
+      node.left = this.removeNode(node.left, data)
+      return node
+    } else if (data > node.data) {
+      node.right = this.removeNode(node.right, data)
+      return node
+    } else {
+      if (!node.left && !node.right) {
+        return null
+      }
+
+      if (!node.left) {
+        return node.right
+      } else if (!node.right) {
+        return node.left
+      } else {
+        let minRight = node.right
+        while (minRight.left) {
+          minRight = minRight.left
+        }
+        node.data = minRight.data
+
+        node.right = this.removeNode(node.right, minRight.data)
+
+        return node
+      }
+    }
   }
 
   min() {
-    throw new NotImplementedError('Not implemented')
-    // remove line with error and write your code here
+    let currentNode = this.rootNode
+    while (currentNode && currentNode.left) {
+      currentNode = currentNode.left
+    }
+    return currentNode ? currentNode.data : null
   }
 
   max() {
-    throw new NotImplementedError('Not implemented')
-    // remove line with error and write your code here
+    let currentNode = this.rootNode
+    while (currentNode && currentNode.right) {
+      currentNode = currentNode.right
+    }
+    return currentNode ? currentNode.data : null
   }
 }
 
