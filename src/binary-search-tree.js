@@ -8,20 +8,20 @@ const { Node } = require('../extensions/list-tree.js')
  */
 class BinarySearchTree {
   constructor() {
-    this.root = null
+    this.rootNode = null
     this.length = 0
   }
 
   root() {
-    return this.root
+    return this.rootNode
   }
 
   add(data) {
     const node = new Node(data)
-    if (!this.root) {
-      this.root = node
+    if (!this.rootNode) {
+      this.rootNode = node
     } else {
-      let currentNode = this.root
+      let currentNode = this.rootNode
       while (true) {
         if (data < currentNode.data) {
           if (!currentNode.left) {
