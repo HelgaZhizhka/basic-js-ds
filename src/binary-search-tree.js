@@ -76,14 +76,17 @@ class BinarySearchTree {
       return node
     } else {
       // node without children 
-      if (node.left === null && node.right === null) {
+      if (!node.left && !node.right) {
         return null
       }
       //node with one children
-      if (node.left === null) {
-        return node.right
-      } else if (node.right === null) {
-        return node.left
+      if (!node.left) {
+        node = node.right
+        return node
+      }
+      if (!node.right) {
+        node = node.left
+        return node
       }
       //node with two children
       const minNode = this.findMinNode(node.right)
@@ -107,45 +110,15 @@ class BinarySearchTree {
     if (!node) {
       return null
     }
-    if (node.left === null) {
+    if (!node.left) {
       return node
     } else {
       return this.findMinNode(node.left)
     }
   }
 
-  // removeNode(node, data) {
-  //   if (!node) {
-  //     return null
-  //   }
-  //   if (data < node.data) {
-  //     node.left = this.removeNode(node.left, data)
-  //     return node
-  //   } else if (data > node.data) {
-  //     node.right = this.removeNode(node.right, data)
-  //     return node
-  //   } else {
-  //     if (!node.left && !node.right) {
-  //       return null
-  //     }
-  //     if (!node.left) {
-  //       return node.right
-  //     } else if (!node.right) {
-  //       return node.left
-  //     } else {
-  //       let minRight = node.right
-  //       while (minRight.left) {
-  //         minRight = minRight.left
-  //       }
-  //       node.data = minRight.data
-  //       node.right = this.removeNode(node.right, minRight.data)
-  //       return node
-  //     }
-  //   }
-  // }
-
   min() {
-    if (this.rootNode === null) {
+    if (!this.rootNode) {
       return null
     }
     const minNode = this.findMinNode(this.rootNode)
@@ -153,7 +126,7 @@ class BinarySearchTree {
   }
 
   max() {
-    if (this.rootNode === null) {
+    if (!this.rootNode) {
       return null
     }
     const maxNode = this.findMaxNode(this.rootNode)
