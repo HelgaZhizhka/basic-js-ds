@@ -18,30 +18,25 @@ class BinarySearchTree {
 
   add(data) {
     const node = new Node(data)
-    if (!this.rootNode) {
-      this.rootNode = node
-    } else {
-      let currentNode = this.rootNode
-      while (true) {
-        if (currentNode.data === data) {
-          return node
-        }
-        if (data < currentNode.data) {
-          if (!currentNode.left) {
-            currentNode.left = node
-            return node
-          } else {
-            currentNode = currentNode.left
-          }
+    const addNode = (currentNode, newNode) => {
+      if (newNode.data < currentNode.data) {
+        if (currentNode.left === null) {
+          currentNode.left = newNode
         } else {
-          if (!currentNode.right) {
-            currentNode.right = node
-            return node
-          } else {
-            currentNode = currentNode.right
-          }
+          addNode(currentNode.left, newNode)
+        }
+      } else {
+        if (currentNode.right === null) {
+          currentNode.right = newNode
+        } else {
+          addNode(currentNode.right, newNode)
         }
       }
+    }
+    if (this.rootNode === null) {
+      this.rootNode = node
+    } else {
+      addNode(this.rootNode, node)
     }
   }
 
@@ -50,15 +45,19 @@ class BinarySearchTree {
   }
 
   find(data) {
-    let currentNode = this.rootNode
-    while (currentNode) {
-      if (data === currentNode.data) {
-        return currentNode
+    const findNode = (node, value) => {
+      if (!node) {
+        return null
       }
-      currentNode =
-        data < currentNode.data ? currentNode.left : currentNode.right
+      if (value < node.data) {
+        return findNode(node.left, value)
+      } else if (value > node.data) {
+        return findNode(node.right, value)
+      } else {
+        return node
+      }
     }
-    return null
+    return findNode(this.rootNode, data)
   }
 
   remove(data) {
@@ -76,42 +75,89 @@ class BinarySearchTree {
       node.right = this.removeNode(node.right, data)
       return node
     } else {
-      if (!node.left && !node.right) {
+      // node without children 
+      if (node.left === null && node.right === null) {
         return null
       }
-
-      if (!node.left) {
+      //node with one children
+      if (node.left === null) {
         return node.right
-      } else if (!node.right) {
+      } else if (node.right === null) {
         return node.left
-      } else {
-        let minRight = node.right
-        while (minRight.left) {
-          minRight = minRight.left
-        }
-        node.data = minRight.data
-
-        node.right = this.removeNode(node.right, minRight.data)
-
-        return node
       }
+      //node with two children
+      const minNode = this.findMinNode(node.right)
+      node.data = minNode.data
+      node.right = this.removeNode(node.right, minNode.data)
+      return node
     }
   }
 
-  min() {
-    let currentNode = this.rootNode
-    while (currentNode && currentNode.left) {
-      currentNode = currentNode.left
+  findMaxNode(node) {
+    if (!node) {
+      return null
     }
-    return currentNode ? currentNode.data : null
+    if (node.right) {
+      return this.findMaxNode(node.right)
+    }
+    return node
+  }
+
+  findMinNode(node) {
+    if (!node) {
+      return null
+    }
+    if (node.left === null) {
+      return node
+    } else {
+      return this.findMinNode(node.left)
+    }
+  }
+
+  // removeNode(node, data) {
+  //   if (!node) {
+  //     return null
+  //   }
+  //   if (data < node.data) {
+  //     node.left = this.removeNode(node.left, data)
+  //     return node
+  //   } else if (data > node.data) {
+  //     node.right = this.removeNode(node.right, data)
+  //     return node
+  //   } else {
+  //     if (!node.left && !node.right) {
+  //       return null
+  //     }
+  //     if (!node.left) {
+  //       return node.right
+  //     } else if (!node.right) {
+  //       return node.left
+  //     } else {
+  //       let minRight = node.right
+  //       while (minRight.left) {
+  //         minRight = minRight.left
+  //       }
+  //       node.data = minRight.data
+  //       node.right = this.removeNode(node.right, minRight.data)
+  //       return node
+  //     }
+  //   }
+  // }
+
+  min() {
+    if (this.rootNode === null) {
+      return null
+    }
+    const minNode = this.findMinNode(this.rootNode)
+    return minNode.data
   }
 
   max() {
-    let currentNode = this.rootNode
-    while (currentNode && currentNode.right) {
-      currentNode = currentNode.right
+    if (this.rootNode === null) {
+      return null
     }
-    return currentNode ? currentNode.data : null
+    const maxNode = this.findMaxNode(this.rootNode)
+    return maxNode.data
   }
 }
 
